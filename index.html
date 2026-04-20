@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f172a">
+<link rel="manifest" href="manifest.json">
+<title>Dani App</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0f172a;color:#f1f5f9;min-height:100vh}
+.header{background:#1e293b;padding:1rem 1.2rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #334155}
+.header h1{font-size:1.1rem;font-weight:600;color:#f8fafc}
+.date{font-size:.8rem;color:#94a3b8}
+.nav{display:flex;background:#1e293b;border-top:1px solid #334155;position:fixed;bottom:0;width:100%}
+.nav button{flex:1;padding:.8rem .5rem;background:none;border:none;color:#64748b;font-size:.65rem;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;transition:color .2s}
+.nav button.active{color:#38bdf8}
+.nav button svg{width:20px;height:20px}
+.page{display:none;padding:1rem 1.2rem;padding-bottom:5rem}
+.page.active{display:block}
+.card{background:#1e293b;border-radius:12px;padding:1rem;margin-bottom:.75rem;border:1px solid #334155}
+.card h3{font-size:.85rem;font-weight:600;color:#94a3b8;margin-bottom:.6rem;text-transform:uppercase;letter-spacing:.05em}
+.event-item{padding:.5rem 0;border-bottom:1px solid #1e293b;font-size:.9rem;display:flex;gap:.75rem;align-items:flex-start}
+.event-time{color:#38bdf8;font-size:.75rem;white-space:nowrap;padding-top:2px}
+.pill{display:inline-flex;align-items:center;gap:.4rem;padding:.35rem .75rem;border-radius:20px;font-size:.8rem;margin:.25rem;cursor:pointer;border:1px solid #334155;background:#0f172a;color:#cbd5e1}
+.pill.done{background:#166534;border-color:#16a34a;color:#bbf7d0}
+.task-item{display:flex;align-items:center;gap:.75rem;padding:.6rem 0;border-bottom:1px solid #334155;font-size:.9rem}
+.task-item input[type=checkbox]{width:18px;height:18px;accent-color:#38bdf8}
+.tag{font-size:.7rem;padding:2px 8px;border-radius:10px;background:#1e3a5f;color:#7dd3fc}
+textarea{width:100%;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:.75rem;color:#f1f5f9;font-size:.9rem;resize:none;font-family:inherit}
+textarea:focus{outline:none;border-color:#38bdf8}
+.btn{background:#0ea5e9;color:#fff;border:none;padding:.65rem 1.2rem;border-radius:8px;font-size:.85rem;cursor:pointer;font-weight:500}
+.section-label{font-size:.75rem;color:#64748b;margin:.75rem 0 .4rem;font-weight:500}
+.stat{text-align:center;flex:1}
+.stat .val{font-size:1.4rem;font-weight:700;color:#38bdf8}
+.stat .lbl{font-size:.7rem;color:#64748b}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Dani App</h1>
+  <span class="date" id="headerDate"></span>
+</div>
+
+<div id="page-home" class="page active">
+  <div class="card">
+    <h3>Hoje</h3>
+    <div id="calEvents"><p style="color:#64748b;font-size:.85rem">Liga o Google Calendar nas definições.</p></div>
+  </div>
+  <div class="card" style="display:flex;gap:0">
+    <div class="stat"><div class="val" id="statSupl">0</div><div class="lbl">Suplementos</div></div>
+    <div class="stat"><div class="val" id="statTasks">0</div><div class="lbl">Tarefas</div></div>
+    <div class="stat"><div class="val" id="statWorkout">–</div><div class="lbl">Treino</div></div>
+  </div>
+</div>
+
+<div id="page-suppl" class="page">
+  <div class="card">
+    <h3>Manhã</h3>
+    <div id="manha"></div>
+  </div>
+  <div class="card">
+    <h3>Tarde</h3>
+    <div id="tarde"></div>
+  </div>
+  <div class="card">
+    <h3>Noite</h3>
+    <div id="noite"></div>
+  </div>
+</div>
+
+<div id="page-workout" class="page">
+  <div class="card">
+    <h3>Treino de hoje</h3>
+    <div id="workoutLog"></div>
+    <div style="margin-top:.75rem;display:flex;gap:.5rem;flex-wrap:wrap">
+      <input id="exName" placeholder="Exercício" style="flex:1;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:.6rem;color:#f1f5f9;font-size:.85rem">
+      <input id="exSeries" placeholder="Séries" style="width:70px;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:.6rem;color:#f1f5f9;font-size:.85rem">
+      <input id="exReps" placeholder="Reps" style="width:70px;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:.6rem;color:#f1f5f9;font-size:.85rem">
+      <input id="exPeso" placeholder="Kg" style="width:60px;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:.6rem;color:#f1f5f9;font-size:.85rem">
+      <button class="btn" onclick="addExercicio()">+</button>
+    </div>
+  </div>
+</div>
+
+<div id="page-tasks" class="page">
+  <div class="section-label">Plantasy</div>
+  <div class="card" id="tasks-plantasy"></div>
+  <div class="section-label">Youtube</div>
+  <div class="card" id="tasks-youtube"></div>
+  <div class="section-label">Farmácia</div>
+  <div class="card" id="tasks-farmacia"></div>
+  <div style="display:flex;gap:.5rem;margin-top:.5rem">
+    <input id="newTask" placeholder="Nova tarefa..." style="flex:1;background:#1e293b;border:1px solid #334155;border-radius:8px;padding:.65rem;color:#f1f5f9;font-size:.85rem">
+    <select id="newTaskCat" style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:.65rem;color:#f1f5f9;font-size:.85rem">
+      <option value="plantasy">Plantasy</option>
+      <option value="youtube">Youtube</option>
+      <option value="farmacia">Farmácia</option>
+    </select>
+    <button class="btn" onclick="addTask()">+</button>
+  </div>
+</div>
+
+<div id="page-notes" class="page">
+  <div class="card">
+    <h3>Nova nota</h3>
+    <textarea id="noteText" rows="5" placeholder="Escreve aqui..."></textarea>
+    <button class="btn" style="margin-top:.6rem;width:100%" onclick="saveNote()">Guardar</button>
+  </div>
+  <div id="notesList"></div>
+</div>
+
+<nav class="nav">
+  <button class="active" onclick="showPage('home',this)">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+    Início
+  </button>
+  <button onclick="showPage('suppl',this)">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+    Suplementos
+  </button>
+  <button onclick="showPage('workout',this)">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12h3m15 0h-3M6 12l-2-4m2 4l-2 4m14-4l2-4m-2 4l2 4M9 12h6"/></svg>
+    Workout
+  </button>
+  <button onclick="showPage('tasks',this)">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+    Tarefas
+  </button>
+  <button onclick="showPage('notes',this)">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+    Notas
+  </button>
+</nav>
+
+<script>
+const SUPPL = {
+  manha: ['Vitamina D3', 'Magnésio', 'Omega-3', 'Zinco'],
+  tarde: ['Creatina', 'Vitamina C'],
+  noite: ['Magnésio', 'Ashwagandha']
+};
+
+const state = JSON.parse(localStorage.getItem('daniapp') || '{}');
+const today = new Date().toISOString().split('T')[0];
+if(state.date !== today) { state.date = today; state.suppl = {}; state.workout = []; state.tasks = state.tasks || {plantasy:[],youtube:[],farmacia:[]}; localStorage.setItem('daniapp', JSON.stringify(state)); }
+
+document.getElementById('headerDate').textContent = new Date().toLocaleDateString('pt-PT',{weekday:'long',day:'numeric',month:'long'});
+
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function renderSuppl() {
+  ['manha','tarde','noite'].forEach(slot => {
+    const el = document.getElementById(slot);
+    el.innerHTML = SUPPL[slot].map(s => {
+      const done = state.suppl[slot+s];
+      return '<span class="pill'+(done?' done':'')+'" onclick="toggleSuppl(''+slot+'',''+s+'')">'+(done?'✓ ':'')+s+'</span>';
+    }).join('');
+  });
+  document.getElementById('statSupl').textContent = Object.values(state.suppl).filter(Boolean).length;
+}
+
+function toggleSuppl(slot, name) {
+  const key = slot+name;
+  state.suppl[key] = !state.suppl[key];
+  localStorage.setItem('daniapp', JSON.stringify(state));
+  renderSuppl();
+}
+
+function renderWorkout() {
+  const el = document.getElementById('workoutLog');
+  el.innerHTML = state.workout.length ? state.workout.map(w => '<div class="event-item"><span class="event-time">'+w.series+'x'+w.reps+' '+w.peso+'kg</span>'+w.nome+'</div>').join('') : '<p style="color:#64748b;font-size:.85rem">Nenhum exercício ainda.</p>';
+  document.getElementById('statWorkout').textContent = state.workout.length ? state.workout.length+'ex' : '–';
+}
+
+function addExercicio() {
+  const nome = document.getElementById('exName').value.trim();
+  if(!nome) return;
+  state.workout.push({nome, series: document.getElementById('exSeries').value||'0', reps: document.getElementById('exReps').value||'0', peso: document.getElementById('exPeso').value||'0'});
+  ['exName','exSeries','exReps','exPeso'].forEach(id => document.getElementById(id).value='');
+  localStorage.setItem('daniapp', JSON.stringify(state));
+  renderWorkout();
+}
+
+function renderTasks() {
+  ['plantasy','youtube','farmacia'].forEach(cat => {
+    const el = document.getElementById('tasks-'+cat);
+    el.innerHTML = (state.tasks[cat]||[]).map((t,i) => '<div class="task-item"><input type="checkbox"'+(t.done?' checked':'')+' onchange="toggleTask(''+cat+'','+i+',this.checked)"><span style="flex:1;'+(t.done?'text-decoration:line-through;color:#64748b':'')+'">'+(t.text)+'</span></div>').join('') || '<p style="color:#64748b;font-size:.8rem">Sem tarefas.</p>';
+  });
+  const total = Object.values(state.tasks).flat().filter(t=>!t.done).length;
+  document.getElementById('statTasks').textContent = total;
+}
+
+function toggleTask(cat, i, done) {
+  state.tasks[cat][i].done = done;
+  localStorage.setItem('daniapp', JSON.stringify(state));
+  renderTasks();
+}
+
+function addTask() {
+  const text = document.getElementById('newTask').value.trim();
+  const cat = document.getElementById('newTaskCat').value;
+  if(!text) return;
+  state.tasks[cat].push({text, done:false});
+  document.getElementById('newTask').value='';
+  localStorage.setItem('daniapp', JSON.stringify(state));
+  renderTasks();
+}
+
+function renderNotes() {
+  const notes = JSON.parse(localStorage.getItem('daniapp-notes')||'[]');
+  document.getElementById('notesList').innerHTML = notes.slice().reverse().map(n => '<div class="card"><p style="font-size:.75rem;color:#64748b;margin-bottom:.4rem">'+n.date+'</p><p style="font-size:.9rem">'+n.text+'</p></div>').join('');
+}
+
+function saveNote() {
+  const text = document.getElementById('noteText').value.trim();
+  if(!text) return;
+  const notes = JSON.parse(localStorage.getItem('daniapp-notes')||'[]');
+  notes.push({text, date: new Date().toLocaleString('pt-PT')});
+  localStorage.setItem('daniapp-notes', JSON.stringify(notes));
+  document.getElementById('noteText').value='';
+  renderNotes();
+}
+
+renderSuppl();
+renderWorkout();
+renderTasks();
+renderNotes();
+</script>
+</body>
+</html>
