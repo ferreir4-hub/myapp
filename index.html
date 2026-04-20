@@ -9,399 +9,395 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>HQ</title>
 <style>
-:root{
-  --bg:#f7f5f2;
-  --bg2:#ffffff;
-  --bg3:#f0ede8;
-  --txt:#2d2926;
-  --muted:#9b9189;
-  --border:#e8e3dc;
-  --blue:#b8d4f0;
-  --blue-txt:#3a6fa8;
-  --green:#b8e8c8;
-  --green-txt:#2e7a4f;
-  --purple:#ddd0f5;
-  --purple-txt:#6b4fa8;
-  --peach:#f5ddd0;
-  --peach-txt:#a85a3a;
-  --yellow:#f5f0b8;
-  --yellow-txt:#8a7a2e;
-}
+:root{--bg:#f7f5f2;--bg2:#ffffff;--bg3:#f0ede8;--txt:#2d2926;--muted:#9b9189;--border:#e8e3dc;--blue:#b8d4f0;--blue-d:#3a6fa8;--green:#b8e8c8;--green-d:#2e7a4f;--purple:#ddd0f5;--purple-d:#6b4fa8;--peach:#f5ddd0;--peach-d:#a85a3a}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden}
-body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;background:var(--bg);color:var(--txt);display:flex;flex-direction:column}
-
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--txt);display:flex;flex-direction:column}
 .topbar{padding:16px 20px 8px;flex-shrink:0}
 .topbar-row{display:flex;justify-content:space-between;align-items:flex-end}
-.topbar-time{font-size:32px;font-weight:300;color:var(--txt);letter-spacing:-.03em;line-height:1}
-.topbar-date{font-size:12px;color:var(--muted);margin-top:3px;font-weight:400}
-.topbar-name{font-size:13px;color:var(--muted);font-weight:400}
-
+.topbar-time{font-size:32px;font-weight:300;letter-spacing:-.03em;line-height:1}
+.topbar-date{font-size:12px;color:var(--muted);margin-top:3px}
 .stats{display:flex;gap:8px;padding:10px 20px 12px;flex-shrink:0}
 .stat{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:10px 6px;text-align:center}
-.stat-val{font-size:18px;font-weight:500;color:var(--txt)}
+.stat-val{font-size:18px;font-weight:500}
 .stat-lbl{font-size:9px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-top:1px}
-
-.content{flex:1;overflow-y:auto;padding:0 20px;padding-bottom:90px}
+.content{flex:1;overflow-y:auto;padding:0 20px 90px}
 .content::-webkit-scrollbar{display:none}
-.page{display:none}
-.page.active{display:block}
-
-.section{margin-bottom:16px}
-.section-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;font-weight:500}
-
+.page{display:none}.page.active{display:block}
+.sec{margin-bottom:16px}
+.sec-lbl{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;font-weight:500}
 .card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:14px 16px;margin-bottom:10px}
-
-.event-row{display:flex;gap:12px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--border)}
-.event-row:last-child{border-bottom:none}
-.event-dot{width:8px;height:8px;border-radius:50%;background:var(--blue);flex-shrink:0;margin-top:5px}
-.event-time{font-size:11px;color:var(--blue-txt);white-space:nowrap;min-width:50px;padding-top:2px;font-weight:500}
-.event-name{font-size:13px;color:var(--txt);line-height:1.4}
-.empty-txt{font-size:12px;color:var(--muted);padding:4px 0}
-
-.pill-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.pill{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:9px;cursor:pointer;transition:all .2s}
-.pill.done{background:var(--green);border-color:var(--green-txt)}
-.pill-dot{width:6px;height:6px;border-radius:50%;background:var(--border);flex-shrink:0;transition:background .2s}
-.pill.done .pill-dot{background:var(--green-txt)}
-.pill-name{font-size:12px;color:var(--txt);line-height:1.3}
-.pill.done .pill-name{color:var(--green-txt)}
-
+.ev-row{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--border)}
+.ev-row:last-child{border-bottom:none}
+.ev-dot{width:8px;height:8px;border-radius:50%;background:var(--blue);flex-shrink:0;margin-top:5px}
+.ev-time{font-size:11px;color:var(--blue-d);white-space:nowrap;min-width:50px;padding-top:2px;font-weight:500}
+.ev-name{font-size:13px;line-height:1.4}
+.empty{font-size:12px;color:var(--muted);padding:4px 0}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.pill{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:9px;cursor:pointer;transition:all .2s;user-select:none}
+.pill.done{background:var(--green);border-color:var(--green-d)}
+.pdot{width:6px;height:6px;border-radius:50%;background:var(--border);flex-shrink:0;transition:background .2s}
+.pill.done .pdot{background:var(--green-d)}
+.pname{font-size:12px;line-height:1.3}
+.pill.done .pname{color:var(--green-d)}
 .ex-row{display:flex;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
 .ex-row:last-child{border-bottom:none}
-.ex-name{flex:1;font-size:13px;color:var(--txt)}
-.ex-tag{font-size:11px;color:var(--purple-txt);background:var(--purple);border-radius:8px;padding:3px 8px;white-space:nowrap}
-
-.field-row{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
-.field{flex:1;min-width:0;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:9px 11px;color:var(--txt);font-size:13px;font-family:inherit}
-.field:focus{outline:none;border-color:var(--muted)}
-.field-sm{width:56px;flex:none}
-.field-xs{width:46px;flex:none}
-.btn-add{background:var(--txt);color:var(--bg);border:none;border-radius:10px;padding:9px 14px;font-size:14px;font-weight:500;cursor:pointer;flex-shrink:0}
-
-.task-row{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
-.task-row:last-child{border-bottom:none}
+.ex-name{flex:1;font-size:13px}
+.ex-tag{font-size:11px;color:var(--purple-d);background:var(--purple);border-radius:8px;padding:3px 8px;white-space:nowrap}
+.frow{display:flex;gap:6px;margin-top:10px;align-items:center}
+.fi{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:9px 11px;color:var(--txt);font-size:13px;font-family:inherit;min-width:0}
+.fi:focus{outline:none;border-color:var(--muted)}
+.fsm{flex:0 0 52px}
+.fxs{flex:0 0 44px}
+.badd{background:var(--txt);color:var(--bg);border:none;border-radius:10px;padding:9px 14px;font-size:14px;cursor:pointer;flex-shrink:0}
+.trow{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.trow:last-child{border-bottom:none}
 .chk{width:18px;height:18px;border-radius:6px;border:1.5px solid var(--border);background:var(--bg);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:all .2s}
-.chk.done{background:var(--purple);border-color:var(--purple-txt)}
-.task-txt{flex:1;font-size:13px;color:var(--txt);line-height:1.4}
-.task-txt.done{color:var(--muted);text-decoration:line-through}
-
-.note-area{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:12px;color:var(--txt);font-size:13px;resize:none;font-family:inherit;line-height:1.7}
-.note-area:focus{outline:none;border-color:var(--muted)}
-.btn-save{width:100%;background:var(--txt);color:var(--bg);border:none;border-radius:12px;padding:11px;font-size:13px;font-weight:500;cursor:pointer;margin-top:8px}
-.note-item{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px}
-.note-ts{font-size:10px;color:var(--muted);margin-bottom:5px}
-.note-body{font-size:13px;color:var(--txt);line-height:1.6}
-
-.select{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:9px 11px;color:var(--txt);font-size:13px;font-family:inherit}
-
+.chk.done{background:var(--purple);border-color:var(--purple-d)}
+.ttxt{flex:1;font-size:13px;line-height:1.4}
+.ttxt.done{color:var(--muted);text-decoration:line-through}
+.nota{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:12px;color:var(--txt);font-size:13px;resize:none;font-family:inherit;line-height:1.7}
+.nota:focus{outline:none;border-color:var(--muted)}
+.bsave{width:100%;background:var(--txt);color:var(--bg);border:none;border-radius:12px;padding:11px;font-size:13px;font-weight:500;cursor:pointer;margin-top:8px}
+.nitem{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px}
+.nts{font-size:10px;color:var(--muted);margin-bottom:5px}
+.nbody{font-size:13px;line-height:1.6}
+.sel{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:9px 11px;color:var(--txt);font-size:13px;font-family:inherit}
+.notion-badge{font-size:9px;padding:2px 6px;border-radius:6px;margin-left:4px;vertical-align:middle}
+.n-ok{background:var(--green);color:var(--green-d)}
+.n-err{background:var(--peach);color:var(--peach-d)}
 .nav{display:flex;background:var(--bg2);border-top:1px solid var(--border);position:fixed;bottom:0;left:0;width:100%;z-index:10;padding-bottom:env(safe-area-inset-bottom)}
-.nav-btn{flex:1;padding:12px 4px 10px;background:none;border:none;color:var(--muted);font-size:9px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;letter-spacing:.06em;text-transform:uppercase;transition:color .2s}
-.nav-btn svg{width:20px;height:20px;stroke-width:1.6}
-.nav-btn.active{color:var(--txt)}
-
-.tag-plantasy{background:var(--blue);color:var(--blue-txt);font-size:9px;padding:2px 7px;border-radius:8px;white-space:nowrap}
-.tag-youtube{background:var(--peach);color:var(--peach-txt);font-size:9px;padding:2px 7px;border-radius:8px;white-space:nowrap}
-.tag-farmacia{background:var(--green);color:var(--green-txt);font-size:9px;padding:2px 7px;border-radius:8px;white-space:nowrap}
+.nbtn{flex:1;padding:12px 4px 10px;background:none;border:none;color:var(--muted);font-size:9px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;letter-spacing:.06em;text-transform:uppercase;transition:color .2s}
+.nbtn svg{width:20px;height:20px;stroke-width:1.6}
+.nbtn.active{color:var(--txt)}
 </style>
 </head>
 <body>
-
 <div class="topbar">
   <div class="topbar-row">
     <div class="topbar-time" id="topTime">--:--</div>
-    <div class="topbar-name">HQ</div>
+    <span style="font-size:13px;color:var(--muted)">HQ</span>
   </div>
   <div class="topbar-date" id="topDate"></div>
 </div>
-
 <div class="stats">
   <div class="stat"><div class="stat-val" id="sSup">-</div><div class="stat-lbl">Suplem.</div></div>
   <div class="stat"><div class="stat-val" id="sEv">-</div><div class="stat-lbl">Eventos</div></div>
-  <div class="stat"><div class="stat-val" id="sEx">-</div><div class="stat-lbl">Treino</div></div>
-  <div class="stat"><div class="stat-val" id="sTasks">-</div><div class="stat-lbl">Tarefas</div></div>
+  <div class="stat"><div class="stat-val" id="sEx">0</div><div class="stat-lbl">Treino</div></div>
+  <div class="stat"><div class="stat-val" id="sTasks">0</div><div class="stat-lbl">Tarefas</div></div>
 </div>
-
 <div class="content">
-
   <div id="page-cal" class="page active">
-    <div class="section">
-      <div class="section-label">Hoje</div>
-      <div class="card" id="cal-today"><div class="empty-txt">A carregar...</div></div>
-    </div>
-    <div class="section">
-      <div class="section-label">Amanhã</div>
-      <div class="card" id="cal-tomorrow"><div class="empty-txt">A carregar...</div></div>
-    </div>
+    <div class="sec"><div class="sec-lbl">Hoje</div><div class="card" id="cal-today"><div class="empty">A carregar...</div></div></div>
+    <div class="sec"><div class="sec-lbl">Amanhã</div><div class="card" id="cal-tmr"><div class="empty">A carregar...</div></div></div>
   </div>
-
   <div id="page-sup" class="page">
-    <div class="section">
-      <div class="section-label">Manhã</div>
-      <div class="pill-grid" id="sup-manha"></div>
-    </div>
-    <div class="section">
-      <div class="section-label">Tarde</div>
-      <div class="pill-grid" id="sup-tarde"></div>
-    </div>
-    <div class="section">
-      <div class="section-label">Noite</div>
-      <div class="pill-grid" id="sup-noite"></div>
-    </div>
+    <div class="sec"><div class="sec-lbl">Manhã</div><div class="pgrid" id="sup-manha"></div></div>
+    <div class="sec"><div class="sec-lbl">Tarde</div><div class="pgrid" id="sup-tarde"></div></div>
+    <div class="sec"><div class="sec-lbl">Noite</div><div class="pgrid" id="sup-noite"></div></div>
   </div>
-
   <div id="page-wk" class="page">
-    <div class="section">
-      <div class="section-label">Hoje</div>
+    <div class="sec"><div class="sec-lbl">Hoje</div>
       <div class="card">
-        <div id="ex-list"><div class="empty-txt">Sem exercícios ainda.</div></div>
-        <div class="field-row">
-          <input class="field" id="eNome" placeholder="Exercício">
-          <input class="field field-sm" id="eSer" placeholder="Sér">
-          <input class="field field-xs" id="eRep" placeholder="Rep">
-          <input class="field field-xs" id="ePeso" placeholder="Kg">
-          <button class="btn-add" onclick="addEx()">+</button>
+        <div id="ex-list"><div class="empty">Sem exercícios ainda.</div></div>
+        <div class="frow">
+          <input class="fi" id="eN" placeholder="Exercício">
+          <input class="fi fsm" id="eS" placeholder="Sér">
+          <input class="fi fxs" id="eR" placeholder="Rep">
+          <input class="fi fxs" id="eP" placeholder="Kg">
+          <button class="badd" onclick="addEx()">+</button>
         </div>
       </div>
     </div>
   </div>
-
   <div id="page-tasks" class="page">
-    <div class="section">
-      <div class="section-label">Plantasy</div>
-      <div class="card" id="t-plantasy"></div>
-    </div>
-    <div class="section">
-      <div class="section-label">Youtube</div>
-      <div class="card" id="t-youtube"></div>
-    </div>
-    <div class="section">
-      <div class="section-label">Farmácia</div>
-      <div class="card" id="t-farmacia"></div>
-    </div>
-    <div class="field-row">
-      <input class="field" id="tTxt" placeholder="Nova tarefa...">
-      <select class="select" id="tCat">
-        <option value="plantasy">Plantasy</option>
-        <option value="youtube">Youtube</option>
-        <option value="farmacia">Farmácia</option>
-      </select>
-      <button class="btn-add" onclick="addTask()">+</button>
+    <div class="sec"><div class="sec-lbl">Plantasy</div><div class="card" id="t-plantasy"></div></div>
+    <div class="sec"><div class="sec-lbl">Youtube</div><div class="card" id="t-youtube"></div></div>
+    <div class="sec"><div class="sec-lbl">Farmácia</div><div class="card" id="t-farmacia"></div></div>
+    <div class="frow">
+      <input class="fi" id="tTxt" placeholder="Nova tarefa...">
+      <select class="sel" id="tCat"><option value="plantasy">Plantasy</option><option value="youtube">Youtube</option><option value="farmacia">Farmácia</option></select>
+      <button class="badd" onclick="addTask()">+</button>
     </div>
   </div>
-
   <div id="page-notes" class="page">
-    <div class="section">
-      <div class="section-label">Nova nota</div>
-      <textarea class="note-area" id="noteTxt" rows="5" placeholder="Escreve aqui..."></textarea>
-      <button class="btn-save" onclick="saveNote()">Guardar</button>
+    <div class="sec"><div class="sec-lbl">Nova nota</div>
+      <textarea class="nota" id="noteTxt" rows="5" placeholder="Escreve aqui..."></textarea>
+      <button class="bsave" onclick="saveNote()">Guardar</button>
     </div>
-    <div class="section">
-      <div class="section-label">Recentes</div>
-      <div id="notes-list"></div>
-    </div>
+    <div class="sec"><div class="sec-lbl">Recentes</div><div id="notes-list"></div></div>
   </div>
-
 </div>
-
 <nav class="nav">
-  <button class="nav-btn active" onclick="goTo('cal',this)">
-    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-    Agenda
+  <button class="nbtn active" id="nb-cal" onclick="goTo('cal','nb-cal')">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Agenda
   </button>
-  <button class="nav-btn" onclick="goTo('sup',this)">
-    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>
-    Suplem.
+  <button class="nbtn" id="nb-sup" onclick="goTo('sup','nb-sup')">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>Suplem.
   </button>
-  <button class="nav-btn" onclick="goTo('wk',this)">
-    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 12h2m12 0h2M6 12l-2-3m2 3l-2 3m14-3l2-3m-2 3l2 3M9 12h6"/></svg>
-    Treino
+  <button class="nbtn" id="nb-wk" onclick="goTo('wk','nb-wk')">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 12h2m12 0h2M6 12l-2-3m2 3l-2 3m14-3l2-3m-2 3l2 3M9 12h6"/></svg>Treino
   </button>
-  <button class="nav-btn" onclick="goTo('tasks',this)">
-    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
-    Tarefas
+  <button class="nbtn" id="nb-tasks" onclick="goTo('tasks','nb-tasks')">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>Tarefas
   </button>
-  <button class="nav-btn" onclick="goTo('notes',this)">
-    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-    Notas
+  <button class="nbtn" id="nb-notes" onclick="goTo('notes','nb-notes')">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>Notas
   </button>
 </nav>
-
 <script>
-// --- CONFIG ---
-const ICAL='https://api.allorigins.win/raw?url='+encodeURIComponent('https://calendar.google.com/calendar/ical/ferreir4.001%40gmail.com/private-b0786216da3ecefdfb64f9c111be74f6/basic.ics');
-const SUPPL={
-  manha:['Vitamina D3','Magnésio','Omega-3','Zinco','Vitamina K2'],
-  tarde:['Creatina','Vitamina C','Coenzima Q10'],
-  noite:['Magnésio','Ashwagandha','Melatonina']
-};
+var ICAL_URL = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://calendar.google.com/calendar/ical/ferreir4.001%40gmail.com/private-b0786216da3ecefdfb64f9c111be74f6/basic.ics');
+var NOTION_KEY = '';
+var NOTION_DB = '';
+var SUPPL = {manha:['Vitamina D3','Magnésio','Omega-3','Zinco','Vitamina K2'],tarde:['Creatina','Vitamina C','Coenzima Q10'],noite:['Magnésio','Ashwagandha','Melatonina']};
 
-// --- STATE ---
-const TODAY=new Date().toISOString().slice(0,10);
-let S=JSON.parse(localStorage.getItem('hq4')||'{}');
-if(S.date!==TODAY){
-  S={date:TODAY,sup:{},ex:[],tasks:S.tasks||{plantasy:[],youtube:[],farmacia:[]},notes:S.notes||[]};
-  persist();
+var TODAY = new Date().toISOString().slice(0,10);
+var S = {};
+try { S = JSON.parse(localStorage.getItem('hq5') || '{}'); } catch(e) { S = {}; }
+if (S.date !== TODAY) {
+  S = {date:TODAY, sup:{}, ex:[], tasks: (S.tasks || {plantasy:[],youtube:[],farmacia:[]}), notes: (S.notes || [])};
+  save();
 }
-function persist(){localStorage.setItem('hq4',JSON.stringify(S));}
+function save() { try { localStorage.setItem('hq5', JSON.stringify(S)); } catch(e){} }
 
-// --- CLOCK ---
-function tick(){
-  const n=new Date();
-  document.getElementById('topTime').textContent=n.toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'});
-  document.getElementById('topDate').textContent=n.toLocaleDateString('pt-PT',{weekday:'long',day:'numeric',month:'long'});
+function tick() {
+  var n = new Date();
+  var t = document.getElementById('topTime');
+  var d = document.getElementById('topDate');
+  if(t) t.textContent = n.toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'});
+  if(d) d.textContent = n.toLocaleDateString('pt-PT',{weekday:'long',day:'numeric',month:'long'});
 }
-tick();setInterval(tick,1000);
+tick();
+setInterval(tick, 1000);
 
-// --- NAV ---
-function goTo(id,btn){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');
-  btn.classList.add('active');
-}
-
-// --- CALENDAR ---
-async function loadCal(){
-  try{
-    const r=await fetch(ICAL);
-    if(!r.ok)throw new Error('fetch failed');
-    const txt=await r.text();
-    const evs=parseICS(txt);
-    const n=new Date();
-    const d0=n.toDateString();
-    const d1=new Date(n.getTime()+86400000).toDateString();
-    const today=evs.filter(e=>e.start.toDateString()===d0).sort((a,b)=>a.start-b.start);
-    const tomorrow=evs.filter(e=>e.start.toDateString()===d1).sort((a,b)=>a.start-b.start);
-    renderCal('cal-today',today);
-    renderCal('cal-tomorrow',tomorrow);
-    document.getElementById('sEv').textContent=today.length;
-  }catch(err){
-    document.getElementById('cal-today').innerHTML='<div class="empty-txt">Sem ligação ao calendário.</div>';
-    document.getElementById('cal-tomorrow').innerHTML='';
-    document.getElementById('sEv').textContent='!';
-  }
+function goTo(id, btnId) {
+  var pages = document.querySelectorAll('.page');
+  for(var i=0;i<pages.length;i++) pages[i].classList.remove('active');
+  var btns = document.querySelectorAll('.nbtn');
+  for(var i=0;i<btns.length;i++) btns[i].classList.remove('active');
+  var pg = document.getElementById('page-' + id);
+  if(pg) pg.classList.add('active');
+  var btn = document.getElementById(btnId);
+  if(btn) btn.classList.add('active');
 }
 
-function parseICS(txt){
-  const evs=[];
-  txt.split('BEGIN:VEVENT').slice(1).forEach(block=>{
-    const g=k=>{const m=block.match(new RegExp(k+'(?:;[^:]*)?:(.+)'));return m?m[1].replace(/\n/g,' ').trim():''};
-    const summary=g('SUMMARY')||'(evento)';
-    const ds=g('DTSTART'),de=g('DTEND');
-    if(!ds)return;
-    const pd=d=>{
-      if(!d)return null;
-      if(d.length===8)return new Date(d.slice(0,4)+'-'+d.slice(4,6)+'-'+d.slice(6,8)+'T00:00:00');
-      const clean=d.replace(/(d{4})(d{2})(d{2})T(d{2})(d{2})(d{2})(Z?)/,'$1-$2-$3T$4:$5:$6');
-      return new Date(clean);
-    };
-    const start=pd(ds);
-    if(!start||isNaN(start))return;
-    evs.push({summary,start,allDay:ds.length===8});
+function loadCal() {
+  fetch(ICAL_URL).then(function(r){ return r.text(); }).then(function(txt){
+    var evs = parseICS(txt);
+    var n = new Date();
+    var d0 = n.toDateString();
+    var d1 = new Date(n.getTime()+86400000).toDateString();
+    var today = evs.filter(function(e){ return e.start.toDateString()===d0; }).sort(function(a,b){return a.start-b.start;});
+    var tmr = evs.filter(function(e){ return e.start.toDateString()===d1; }).sort(function(a,b){return a.start-b.start;});
+    renderCal('cal-today', today);
+    renderCal('cal-tmr', tmr);
+    var sv = document.getElementById('sEv');
+    if(sv) sv.textContent = today.length;
+  }).catch(function(){
+    var el = document.getElementById('cal-today');
+    if(el) el.innerHTML = '<div class="empty">Erro ao carregar calendário.</div>';
+    var sv = document.getElementById('sEv');
+    if(sv) sv.textContent = '!';
   });
+}
+
+function parseICS(txt) {
+  var evs = [];
+  var blocks = txt.split('BEGIN:VEVENT');
+  for(var i=1;i<blocks.length;i++){
+    var block = blocks[i];
+    var summary = (block.match(/SUMMARY[^:]*:(.+)/) || [])[1] || '(evento)';
+    summary = summary.trim().replace(/\n/g,' ');
+    var ds = (block.match(/DTSTART[^:]*:(.+)/) || [])[1];
+    if(!ds) continue;
+    ds = ds.trim();
+    var allDay = ds.length === 8;
+    var start;
+    if(allDay){
+      start = new Date(ds.slice(0,4)+'-'+ds.slice(4,6)+'-'+ds.slice(6,8)+'T00:00:00');
+    } else {
+      var clean = ds.replace(/(d{4})(d{2})(d{2})T(d{2})(d{2})(d{2}).*/,'$1-$2-$3T$4:$5:$6');
+      start = new Date(clean);
+    }
+    if(!isNaN(start.getTime())) evs.push({summary:summary, start:start, allDay:allDay});
+  }
   return evs;
 }
 
-function renderCal(id,evs){
-  const el=document.getElementById(id);
-  if(!evs.length){el.innerHTML='<div class="empty-txt">Sem eventos.</div>';return;}
-  el.innerHTML=evs.map(e=>{
-    const t=e.allDay?'dia todo':e.start.toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'});
-    return '<div class="event-row"><div class="event-dot"></div><span class="event-time">'+t+'</span><span class="event-name">'+e.summary+'</span></div>';
-  }).join('');
+function renderCal(id, evs) {
+  var el = document.getElementById(id);
+  if(!el) return;
+  if(!evs.length){ el.innerHTML='<div class="empty">Sem eventos.</div>'; return; }
+  var html = '';
+  for(var i=0;i<evs.length;i++){
+    var e = evs[i];
+    var t = e.allDay ? 'dia todo' : e.start.toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'});
+    html += '<div class="ev-row"><div class="ev-dot"></div><span class="ev-time">'+t+'</span><span class="ev-name">'+e.summary+'</span></div>';
+  }
+  el.innerHTML = html;
 }
 
-// --- SUPLEMENTOS ---
-function renderSup(){
-  let done=0,total=0;
-  Object.entries(SUPPL).forEach(([slot,list])=>{
-    const el=document.getElementById('sup-'+slot);
-    el.innerHTML=list.map(s=>{
+function renderSup() {
+  var done=0, total=0;
+  var slots = ['manha','tarde','noite'];
+  for(var s=0;s<slots.length;s++){
+    var slot = slots[s];
+    var list = SUPPL[slot];
+    var el = document.getElementById('sup-'+slot);
+    if(!el) continue;
+    var html = '';
+    for(var i=0;i<list.length;i++){
       total++;
-      const k=slot+'|'+s,d=!!S.sup[k];
-      if(d)done++;
-      return '<div class="pill'+(d?' done':'')+'" onclick="toggleSup(''+slot+'',''+s+'')">'
-        +'<div class="pill-dot"></div>'
-        +'<div class="pill-name">'+s+'</div>'
-        +'</div>';
-    }).join('');
-  });
-  document.getElementById('sSup').textContent=done+'/'+total;
-}
-function toggleSup(slot,s){
-  const k=slot+'|'+s;S.sup[k]=!S.sup[k];persist();renderSup();
-}
-
-// --- WORKOUT ---
-function renderEx(){
-  document.getElementById('sEx').textContent=S.ex.length||'0';
-  const el=document.getElementById('ex-list');
-  if(!S.ex.length){el.innerHTML='<div class="empty-txt">Sem exercícios ainda.</div>';return;}
-  el.innerHTML=S.ex.map(e=>
-    '<div class="ex-row"><span class="ex-name">'+e.nome+'</span><span class="ex-tag">'+e.ser+'x'+e.rep+' · '+e.peso+'kg</span></div>'
-  ).join('');
-}
-function addEx(){
-  const nome=document.getElementById('eNome').value.trim();
-  if(!nome)return;
-  S.ex.push({
-    nome,
-    ser:document.getElementById('eSer').value||'0',
-    rep:document.getElementById('eRep').value||'0',
-    peso:document.getElementById('ePeso').value||'0'
-  });
-  ['eNome','eSer','eRep','ePeso'].forEach(id=>document.getElementById(id).value='');
-  persist();renderEx();
+      var name = list[i];
+      var k = slot+'|'+name;
+      var d = !!S.sup[k];
+      if(d) done++;
+      html += '<div class="pill'+(d?' done':'')+'" onclick="toggleSup(''+slot+'',''+name+'')">'
+        +'<div class="pdot"></div><div class="pname">'+name+'</div></div>';
+    }
+    el.innerHTML = html;
+  }
+  var sv = document.getElementById('sSup');
+  if(sv) sv.textContent = done+'/'+total;
 }
 
-// --- TAREFAS ---
-function renderTasks(){
-  let open=0;
-  ['plantasy','youtube','farmacia'].forEach(cat=>{
-    const items=S.tasks[cat]||[];
-    open+=items.filter(t=>!t.done).length;
-    const el=document.getElementById('t-'+cat);
-    if(!items.length){el.innerHTML='<div class="empty-txt">Sem tarefas.</div>';return;}
-    el.innerHTML=items.map((t,i)=>{
-      const d=t.done;
-      return '<div class="task-row">'
-        +'<div class="chk'+(d?' done':'')+'" onclick="toggleTask(''+cat+'','+i+')">'
-        +(d?'<svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#6b4fa8" stroke-width="2.5"><path d="M2 5l2 2 4-4"/></svg>':'')
-        +'</div>'
-        +'<span class="task-txt'+(d?' done':'')+'">'+t.text+'</span>'
-        +'</div>';
-    }).join('');
-  });
-  document.getElementById('sTasks').textContent=open;
-}
-function toggleTask(cat,i){S.tasks[cat][i].done=!S.tasks[cat][i].done;persist();renderTasks();}
-function addTask(){
-  const text=document.getElementById('tTxt').value.trim();
-  const cat=document.getElementById('tCat').value;
-  if(!text)return;
-  S.tasks[cat].push({text,done:false});
-  document.getElementById('tTxt').value='';
-  persist();renderTasks();
+function toggleSup(slot, name) {
+  var k = slot+'|'+name;
+  S.sup[k] = !S.sup[k];
+  save();
+  renderSup();
 }
 
-// --- NOTAS ---
-function renderNotes(){
-  const el=document.getElementById('notes-list');
-  if(!S.notes.length){el.innerHTML='<div class="empty-txt">Sem notas.</div>';return;}
-  el.innerHTML=S.notes.slice().reverse().map(n=>
-    '<div class="note-item"><div class="note-ts">'+n.date+'</div><div class="note-body">'+n.text+'</div></div>'
-  ).join('');
-}
-function saveNote(){
-  const text=document.getElementById('noteTxt').value.trim();
-  if(!text)return;
-  S.notes.push({text,date:new Date().toLocaleString('pt-PT')});
-  document.getElementById('noteTxt').value='';
-  persist();renderNotes();
+function renderEx() {
+  var sv = document.getElementById('sEx');
+  if(sv) sv.textContent = S.ex.length;
+  var el = document.getElementById('ex-list');
+  if(!el) return;
+  if(!S.ex.length){ el.innerHTML='<div class="empty">Sem exercícios ainda.</div>'; return; }
+  var html = '';
+  for(var i=0;i<S.ex.length;i++){
+    var e = S.ex[i];
+    html += '<div class="ex-row"><span class="ex-name">'+e.nome+'</span><span class="ex-tag">'+e.ser+'x'+e.rep+' · '+e.peso+'kg</span></div>';
+  }
+  el.innerHTML = html;
 }
 
-// --- INIT ---
+function addEx() {
+  var nome = document.getElementById('eN').value.trim();
+  if(!nome) return;
+  S.ex.push({nome:nome, ser:document.getElementById('eS').value||'0', rep:document.getElementById('eR').value||'0', peso:document.getElementById('eP').value||'0'});
+  document.getElementById('eN').value='';
+  document.getElementById('eS').value='';
+  document.getElementById('eR').value='';
+  document.getElementById('eP').value='';
+  save();
+  renderEx();
+}
+
+function renderTasks() {
+  var open = 0;
+  var cats = ['plantasy','youtube','farmacia'];
+  for(var c=0;c<cats.length;c++){
+    var cat = cats[c];
+    var items = S.tasks[cat] || [];
+    open += items.filter(function(t){ return !t.done; }).length;
+    var el = document.getElementById('t-'+cat);
+    if(!el) continue;
+    if(!items.length){ el.innerHTML='<div class="empty">Sem tarefas.</div>'; continue; }
+    var html = '';
+    for(var i=0;i<items.length;i++){
+      var t = items[i];
+      html += '<div class="trow">'
+        +'<div class="chk'+(t.done?' done':'')+'" onclick="toggleTask(''+cat+'','+i+')">'
+        +(t.done?'<svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#6b4fa8" stroke-width="2.5"><path d="M2 5l2 2 4-4"/></svg>':'')
+        +'</div><span class="ttxt'+(t.done?' done':'')+'">'+t.text+'</span></div>';
+    }
+    el.innerHTML = html;
+  }
+  var sv = document.getElementById('sTasks');
+  if(sv) sv.textContent = open;
+}
+
+function toggleTask(cat, i) {
+  S.tasks[cat][i].done = !S.tasks[cat][i].done;
+  save();
+  renderTasks();
+  if(NOTION_KEY && S.tasks[cat][i].notionId) {
+    notionUpdateTask(S.tasks[cat][i].notionId, S.tasks[cat][i].done);
+  }
+}
+
+function addTask() {
+  var text = document.getElementById('tTxt').value.trim();
+  var cat = document.getElementById('tCat').value;
+  if(!text) return;
+  var task = {text:text, done:false, cat:cat};
+  S.tasks[cat].push(task);
+  document.getElementById('tTxt').value = '';
+  save();
+  renderTasks();
+  if(NOTION_KEY && NOTION_DB) notionAddTask(task, S.tasks[cat].length-1);
+}
+
+function renderNotes() {
+  var el = document.getElementById('notes-list');
+  if(!el) return;
+  if(!S.notes.length){ el.innerHTML='<div class="empty">Sem notas.</div>'; return; }
+  var html = '';
+  var arr = S.notes.slice().reverse();
+  for(var i=0;i<arr.length;i++){
+    html += '<div class="nitem"><div class="nts">'+arr[i].date+'</div><div class="nbody">'+arr[i].text+'</div></div>';
+  }
+  el.innerHTML = html;
+}
+
+function saveNote() {
+  var text = document.getElementById('noteTxt').value.trim();
+  if(!text) return;
+  var note = {text:text, date:new Date().toLocaleString('pt-PT')};
+  S.notes.push(note);
+  document.getElementById('noteTxt').value = '';
+  save();
+  renderNotes();
+  if(NOTION_KEY && NOTION_DB) notionAddNote(note);
+}
+
+function notionAddTask(task, idx) {
+  fetch('https://api.notion.com/v1/pages', {
+    method:'POST',
+    headers:{'Authorization':'Bearer '+NOTION_KEY,'Content-Type':'application/json','Notion-Version':'2022-06-28'},
+    body: JSON.stringify({
+      parent:{database_id:NOTION_DB},
+      properties:{
+        Name:{title:[{text:{content:task.text}}]},
+        Projecto:{select:{name:task.cat}},
+        Feito:{checkbox:false}
+      }
+    })
+  }).then(function(r){return r.json();}).then(function(d){
+    if(d.id) { S.tasks[task.cat][idx].notionId = d.id; save(); }
+  }).catch(function(){});
+}
+
+function notionUpdateTask(pageId, done) {
+  fetch('https://api.notion.com/v1/pages/'+pageId, {
+    method:'PATCH',
+    headers:{'Authorization':'Bearer '+NOTION_KEY,'Content-Type':'application/json','Notion-Version':'2022-06-28'},
+    body: JSON.stringify({properties:{Feito:{checkbox:done}}})
+  }).catch(function(){});
+}
+
+function notionAddNote(note) {
+  fetch('https://api.notion.com/v1/pages', {
+    method:'POST',
+    headers:{'Authorization':'Bearer '+NOTION_KEY,'Content-Type':'application/json','Notion-Version':'2022-06-28'},
+    body: JSON.stringify({
+      parent:{database_id:NOTION_DB},
+      properties:{Name:{title:[{text:{content:note.text.slice(0,100)}}]},Data:{date:{start:new Date().toISOString().slice(0,10)}}}
+    })
+  }).catch(function(){});
+}
+
 loadCal();
 renderSup();
 renderEx();
