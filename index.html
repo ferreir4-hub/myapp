@@ -1,235 +1,288 @@
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0f172a">
-<link rel="manifest" href="manifest.json">
-<title>Dani App</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080c10">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>HQ</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0f172a;color:#f1f5f9;min-height:100vh}
-.header{background:#1e293b;padding:1rem 1.2rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #334155}
-.header h1{font-size:1.1rem;font-weight:600;color:#f8fafc}
-.date{font-size:.8rem;color:#94a3b8}
-.nav{display:flex;background:#1e293b;border-top:1px solid #334155;position:fixed;bottom:0;width:100%}
-.nav button{flex:1;padding:.8rem .5rem;background:none;border:none;color:#64748b;font-size:.65rem;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;transition:color .2s}
-.nav button.active{color:#38bdf8}
-.nav button svg{width:20px;height:20px}
-.page{display:none;padding:1rem 1.2rem;padding-bottom:5rem}
+:root{--bg:#080c10;--bg2:#0d1117;--bg3:#161b22;--acc:#00f0ff;--acc2:#7f5af0;--txt:#e2e8f0;--muted:#4a5568;--green:#00e676;--red:#ff4f4f;--border:#1e2a3a}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;background:var(--bg);color:var(--txt);display:flex;flex-direction:column}
+/* top bar */
+.topbar{padding:14px 18px 10px;display:flex;justify-content:space-between;align-items:flex-start;flex-shrink:0}
+.topbar-date{font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.topbar-time{font-size:28px;font-weight:700;color:var(--txt);letter-spacing:-.02em;line-height:1}
+.topbar-right{text-align:right}
+.topbar-greeting{font-size:11px;color:var(--muted)}
+/* stats row */
+.stats{display:flex;gap:8px;padding:0 18px 14px;flex-shrink:0}
+.stat{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 8px;text-align:center}
+.stat-val{font-size:20px;font-weight:700;color:var(--acc);font-variant-numeric:tabular-nums}
+.stat-lbl{font-size:9px;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;margin-top:2px}
+/* content */
+.content{flex:1;overflow-y:auto;padding:0 18px;padding-bottom:80px}
+.content::-webkit-scrollbar{display:none}
+/* page */
+.page{display:none}
 .page.active{display:block}
-.card{background:#1e293b;border-radius:12px;padding:1rem;margin-bottom:.75rem;border:1px solid #334155}
-.card h3{font-size:.85rem;font-weight:600;color:#94a3b8;margin-bottom:.6rem;text-transform:uppercase;letter-spacing:.05em}
-.event-item{padding:.5rem 0;border-bottom:1px solid #1e293b;font-size:.9rem;display:flex;gap:.75rem;align-items:flex-start}
-.event-time{color:#38bdf8;font-size:.75rem;white-space:nowrap;padding-top:2px}
-.pill{display:inline-flex;align-items:center;gap:.4rem;padding:.35rem .75rem;border-radius:20px;font-size:.8rem;margin:.25rem;cursor:pointer;border:1px solid #334155;background:#0f172a;color:#cbd5e1}
-.pill.done{background:#166534;border-color:#16a34a;color:#bbf7d0}
-.task-item{display:flex;align-items:center;gap:.75rem;padding:.6rem 0;border-bottom:1px solid #334155;font-size:.9rem}
-.task-item input[type=checkbox]{width:18px;height:18px;accent-color:#38bdf8}
-.tag{font-size:.7rem;padding:2px 8px;border-radius:10px;background:#1e3a5f;color:#7dd3fc}
-textarea{width:100%;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:.75rem;color:#f1f5f9;font-size:.9rem;resize:none;font-family:inherit}
-textarea:focus{outline:none;border-color:#38bdf8}
-.btn{background:#0ea5e9;color:#fff;border:none;padding:.65rem 1.2rem;border-radius:8px;font-size:.85rem;cursor:pointer;font-weight:500}
-.section-label{font-size:.75rem;color:#64748b;margin:.75rem 0 .4rem;font-weight:500}
-.stat{text-align:center;flex:1}
-.stat .val{font-size:1.4rem;font-weight:700;color:#38bdf8}
-.stat .lbl{font-size:.7rem;color:#64748b}
+/* section */
+.section{margin-bottom:14px}
+.section-title{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+/* cards */
+.card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px}
+/* suplementos */
+.supl-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.supl-item{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:9px 10px;display:flex;align-items:center;gap:8px;cursor:pointer;transition:border-color .15s,background .15s}
+.supl-item.done{background:#001a1a;border-color:var(--green)}
+.supl-dot{width:7px;height:7px;border-radius:50%;background:var(--border);flex-shrink:0;transition:background .15s}
+.supl-item.done .supl-dot{background:var(--green)}
+.supl-name{font-size:12px;color:var(--txt);line-height:1.2}
+.supl-item.done .supl-name{color:var(--green)}
+/* workout */
+.ex-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)}
+.ex-row:last-child{border-bottom:none}
+.ex-name{flex:1;font-size:13px}
+.ex-badge{font-size:11px;color:var(--acc);font-variant-numeric:tabular-nums;white-space:nowrap}
+.add-row{display:grid;grid-template-columns:1fr 52px 52px 48px 38px;gap:6px;margin-top:10px}
+.add-row input{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:8px 9px;color:var(--txt);font-size:12px;width:100%;font-family:inherit}
+.add-row input:focus{outline:none;border-color:var(--acc)}
+/* tarefas */
+.task-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.task-row:last-child{border-bottom:none}
+.task-check{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--muted);background:none;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.task-check.done{background:var(--acc2);border-color:var(--acc2)}
+.task-text{flex:1;font-size:13px;line-height:1.3}
+.task-text.done{color:var(--muted);text-decoration:line-through}
+.proj-tag{font-size:9px;padding:2px 6px;border-radius:10px;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
+.tag-plantasy{background:#0a1a2a;color:#38bdf8;border:1px solid #1e3a5f}
+.tag-youtube{background:#1a0a0a;color:#ff4f4f;border:1px solid #3a1a1a}
+.tag-farmacia{background:#0a1a0a;color:#00e676;border:1px solid #1a3a1a}
+/* notas */
+.note-input{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px;color:var(--txt);font-size:13px;resize:none;font-family:inherit;line-height:1.6}
+.note-input:focus{outline:none;border-color:var(--acc)}
+.note-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:11px 13px;margin-top:8px}
+.note-date{font-size:10px;color:var(--muted);margin-bottom:5px}
+.note-body{font-size:13px;line-height:1.5;color:var(--txt)}
+/* add task row */
+.input-row{display:flex;gap:6px;margin-top:10px}
+.input-row input,.input-row select{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:9px 10px;color:var(--txt);font-size:12px;font-family:inherit}
+.input-row input{flex:1}
+/* btn */
+.btn{background:var(--acc);color:#000;border:none;border-radius:8px;padding:9px 14px;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.03em}
+.btn-ghost{background:var(--bg3);color:var(--acc);border:1px solid var(--acc);border-radius:8px;padding:9px 14px;font-size:12px;font-weight:600;cursor:pointer;width:100%;margin-top:8px}
+/* nav */
+.nav{display:flex;background:var(--bg2);border-top:1px solid var(--border);position:fixed;bottom:0;left:0;width:100%;z-index:10;padding-bottom:env(safe-area-inset-bottom)}
+.nav-btn{flex:1;padding:11px 4px 9px;background:none;border:none;color:var(--muted);font-size:9px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;letter-spacing:.05em;text-transform:uppercase;transition:color .15s}
+.nav-btn svg{width:19px;height:19px;stroke-width:1.8}
+.nav-btn.active{color:var(--acc)}
+.nav-btn.active svg{filter:drop-shadow(0 0 4px var(--acc))}
+/* acc line top */
+.acc-line{height:2px;background:linear-gradient(90deg,var(--acc2),var(--acc));border-radius:0 0 4px 4px;margin-bottom:1px;flex-shrink:0}
 </style>
 </head>
 <body>
-<div class="header">
-  <h1>Dani App</h1>
-  <span class="date" id="headerDate"></span>
-</div>
 
-<div id="page-home" class="page active">
-  <div class="card">
-    <h3>Hoje</h3>
-    <div id="calEvents"><p style="color:#64748b;font-size:.85rem">Liga o Google Calendar nas definições.</p></div>
+<div class="acc-line"></div>
+
+<div class="topbar">
+  <div>
+    <div class="topbar-date" id="topDate"></div>
+    <div class="topbar-time" id="topTime"></div>
   </div>
-  <div class="card" style="display:flex;gap:0">
-    <div class="stat"><div class="val" id="statSupl">0</div><div class="lbl">Suplementos</div></div>
-    <div class="stat"><div class="val" id="statTasks">0</div><div class="lbl">Tarefas</div></div>
-    <div class="stat"><div class="val" id="statWorkout">–</div><div class="lbl">Treino</div></div>
+  <div class="topbar-right">
+    <div class="topbar-greeting">HQ</div>
   </div>
 </div>
 
-<div id="page-suppl" class="page">
-  <div class="card">
-    <h3>Manhã</h3>
-    <div id="manha"></div>
-  </div>
-  <div class="card">
-    <h3>Tarde</h3>
-    <div id="tarde"></div>
-  </div>
-  <div class="card">
-    <h3>Noite</h3>
-    <div id="noite"></div>
-  </div>
+<div class="stats">
+  <div class="stat"><div class="stat-val" id="sSup">0</div><div class="stat-lbl">Suplem.</div></div>
+  <div class="stat"><div class="stat-val" id="sTasks">0</div><div class="stat-lbl">Tarefas</div></div>
+  <div class="stat"><div class="stat-val" id="sEx">–</div><div class="stat-lbl">Exerc.</div></div>
+  <div class="stat"><div class="stat-val" id="sNotes">0</div><div class="stat-lbl">Notas</div></div>
 </div>
 
-<div id="page-workout" class="page">
-  <div class="card">
-    <h3>Treino de hoje</h3>
-    <div id="workoutLog"></div>
-    <div style="margin-top:.75rem;display:flex;gap:.5rem;flex-wrap:wrap">
-      <input id="exName" placeholder="Exercício" style="flex:1;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:.6rem;color:#f1f5f9;font-size:.85rem">
-      <input id="exSeries" placeholder="Séries" style="width:70px;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:.6rem;color:#f1f5f9;font-size:.85rem">
-      <input id="exReps" placeholder="Reps" style="width:70px;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:.6rem;color:#f1f5f9;font-size:.85rem">
-      <input id="exPeso" placeholder="Kg" style="width:60px;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:.6rem;color:#f1f5f9;font-size:.85rem">
-      <button class="btn" onclick="addExercicio()">+</button>
+<div class="content">
+
+  <!-- SUPLEMENTOS -->
+  <div id="page-sup" class="page active">
+    <div class="section">
+      <div class="section-title">Manhã</div>
+      <div class="supl-grid" id="sup-manha"></div>
+    </div>
+    <div class="section">
+      <div class="section-title">Tarde</div>
+      <div class="supl-grid" id="sup-tarde"></div>
+    </div>
+    <div class="section">
+      <div class="section-title">Noite</div>
+      <div class="supl-grid" id="sup-noite"></div>
     </div>
   </div>
-</div>
 
-<div id="page-tasks" class="page">
-  <div class="section-label">Plantasy</div>
-  <div class="card" id="tasks-plantasy"></div>
-  <div class="section-label">Youtube</div>
-  <div class="card" id="tasks-youtube"></div>
-  <div class="section-label">Farmácia</div>
-  <div class="card" id="tasks-farmacia"></div>
-  <div style="display:flex;gap:.5rem;margin-top:.5rem">
-    <input id="newTask" placeholder="Nova tarefa..." style="flex:1;background:#1e293b;border:1px solid #334155;border-radius:8px;padding:.65rem;color:#f1f5f9;font-size:.85rem">
-    <select id="newTaskCat" style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:.65rem;color:#f1f5f9;font-size:.85rem">
-      <option value="plantasy">Plantasy</option>
-      <option value="youtube">Youtube</option>
-      <option value="farmacia">Farmácia</option>
-    </select>
-    <button class="btn" onclick="addTask()">+</button>
+  <!-- WORKOUT -->
+  <div id="page-wk" class="page">
+    <div class="section">
+      <div class="section-title">Treino de hoje</div>
+      <div class="card">
+        <div id="exList"><p style="font-size:12px;color:var(--muted)">Nenhum exercício ainda.</p></div>
+        <div class="add-row">
+          <input id="eNome" placeholder="Exercício">
+          <input id="eSer" placeholder="Sér.">
+          <input id="eRep" placeholder="Reps">
+          <input id="ePeso" placeholder="Kg">
+          <button class="btn" onclick="addEx()">+</button>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
 
-<div id="page-notes" class="page">
-  <div class="card">
-    <h3>Nova nota</h3>
-    <textarea id="noteText" rows="5" placeholder="Escreve aqui..."></textarea>
-    <button class="btn" style="margin-top:.6rem;width:100%" onclick="saveNote()">Guardar</button>
+  <!-- TAREFAS -->
+  <div id="page-tasks" class="page">
+    <div class="section">
+      <div class="section-title">Plantasy</div>
+      <div class="card" id="t-plantasy"></div>
+    </div>
+    <div class="section">
+      <div class="section-title">Youtube</div>
+      <div class="card" id="t-youtube"></div>
+    </div>
+    <div class="section">
+      <div class="section-title">Farmácia</div>
+      <div class="card" id="t-farmacia"></div>
+    </div>
+    <div class="input-row">
+      <input id="tText" placeholder="Nova tarefa...">
+      <select id="tCat" style="min-width:90px">
+        <option value="plantasy">Plantasy</option>
+        <option value="youtube">Youtube</option>
+        <option value="farmacia">Farmácia</option>
+      </select>
+      <button class="btn" onclick="addTask()">+</button>
+    </div>
   </div>
-  <div id="notesList"></div>
+
+  <!-- NOTAS -->
+  <div id="page-notes" class="page">
+    <div class="section">
+      <div class="section-title">Nova nota</div>
+      <textarea class="note-input" id="noteText" rows="5" placeholder="Escreve aqui..."></textarea>
+      <button class="btn-ghost" onclick="saveNote()">Guardar nota</button>
+    </div>
+    <div class="section">
+      <div class="section-title">Recentes</div>
+      <div id="notesList"></div>
+    </div>
+  </div>
+
 </div>
 
 <nav class="nav">
-  <button class="active" onclick="showPage('home',this)">
-    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-    Início
+  <button class="nav-btn active" onclick="nav('sup',this)">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+    Suplem.
   </button>
-  <button onclick="showPage('suppl',this)">
-    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
-    Suplementos
-  </button>
-  <button onclick="showPage('workout',this)">
-    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12h3m15 0h-3M6 12l-2-4m2 4l-2 4m14-4l2-4m-2 4l2 4M9 12h6"/></svg>
+  <button class="nav-btn" onclick="nav('wk',this)">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h3m15 0h-3M6 12l-2-4m2 4l-2 4m14-4l2-4m-2 4l2 4M9 12h6"/></svg>
     Workout
   </button>
-  <button onclick="showPage('tasks',this)">
-    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+  <button class="nav-btn" onclick="nav('tasks',this)">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
     Tarefas
   </button>
-  <button onclick="showPage('notes',this)">
-    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+  <button class="nav-btn" onclick="nav('notes',this)">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
     Notas
   </button>
 </nav>
 
 <script>
-const SUPPL = {
-  manha: ['Vitamina D3', 'Magnésio', 'Omega-3', 'Zinco'],
-  tarde: ['Creatina', 'Vitamina C'],
-  noite: ['Magnésio', 'Ashwagandha']
-};
+const SUPPL={manha:['Vitamina D3','Magnésio','Omega-3','Zinco','Vitamina K2'],tarde:['Creatina','Vitamina C','Coenzima Q10'],noite:['Magnésio','Ashwagandha','Melatonina']};
+const today=new Date().toISOString().split('T')[0];
+let S=JSON.parse(localStorage.getItem('hq2')||'{}');
+if(S.date!==today){S={date:today,sup:{},ex:[],tasks:S.tasks||{plantasy:[],youtube:[],farmacia:[]},notes:S.notes||[]};save();}
+function save(){localStorage.setItem('hq2',JSON.stringify(S));}
 
-const state = JSON.parse(localStorage.getItem('daniapp') || '{}');
-const today = new Date().toISOString().split('T')[0];
-if(state.date !== today) { state.date = today; state.suppl = {}; state.workout = []; state.tasks = state.tasks || {plantasy:[],youtube:[],farmacia:[]}; localStorage.setItem('daniapp', JSON.stringify(state)); }
+function updateClock(){
+  const n=new Date();
+  document.getElementById('topTime').textContent=n.toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('topDate').textContent=n.toLocaleDateString('pt-PT',{weekday:'short',day:'numeric',month:'short'}).toUpperCase();
+}
+updateClock();setInterval(updateClock,1000);
 
-document.getElementById('headerDate').textContent = new Date().toLocaleDateString('pt-PT',{weekday:'long',day:'numeric',month:'long'});
-
-function showPage(id, btn) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+function nav(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
   btn.classList.add('active');
 }
 
-function renderSuppl() {
-  ['manha','tarde','noite'].forEach(slot => {
-    const el = document.getElementById(slot);
-    el.innerHTML = SUPPL[slot].map(s => {
-      const done = state.suppl[slot+s];
-      return '<span class="pill'+(done?' done':'')+'" onclick="toggleSuppl(''+slot+'',''+s+'')">'+(done?'✓ ':'')+s+'</span>';
+function renderSup(){
+  let done=0;
+  Object.keys(SUPPL).forEach(slot=>{
+    const el=document.getElementById('sup-'+slot);
+    el.innerHTML=SUPPL[slot].map(s=>{
+      const k=slot+s,d=S.sup[k];
+      if(d)done++;
+      return '<div class="supl-item'+(d?' done':'')+'" onclick="toggleSup(''+slot+'',''+s+'')"><div class="supl-dot"></div><div class="supl-name">'+s+'</div></div>';
     }).join('');
   });
-  document.getElementById('statSupl').textContent = Object.values(state.suppl).filter(Boolean).length;
+  document.getElementById('sSup').textContent=done+'/'+Object.values(SUPPL).flat().length;
+}
+function toggleSup(slot,name){const k=slot+name;S.sup[k]=!S.sup[k];save();renderSup();}
+
+function renderEx(){
+  const el=document.getElementById('exList');
+  document.getElementById('sEx').textContent=S.ex.length||'–';
+  if(!S.ex.length){el.innerHTML='<p style="font-size:12px;color:var(--muted)">Nenhum exercício ainda.</p>';return;}
+  el.innerHTML=S.ex.map(e=>'<div class="ex-row"><span class="ex-name">'+e.nome+'</span><span class="ex-badge">'+e.ser+'x'+e.rep+' · '+e.peso+'kg</span></div>').join('');
+}
+function addEx(){
+  const nome=document.getElementById('eNome').value.trim();
+  if(!nome)return;
+  S.ex.push({nome,ser:document.getElementById('eSer').value||'0',rep:document.getElementById('eRep').value||'0',peso:document.getElementById('ePeso').value||'0'});
+  ['eNome','eSer','eRep','ePeso'].forEach(id=>document.getElementById(id).value='');
+  save();renderEx();
 }
 
-function toggleSuppl(slot, name) {
-  const key = slot+name;
-  state.suppl[key] = !state.suppl[key];
-  localStorage.setItem('daniapp', JSON.stringify(state));
-  renderSuppl();
-}
-
-function renderWorkout() {
-  const el = document.getElementById('workoutLog');
-  el.innerHTML = state.workout.length ? state.workout.map(w => '<div class="event-item"><span class="event-time">'+w.series+'x'+w.reps+' '+w.peso+'kg</span>'+w.nome+'</div>').join('') : '<p style="color:#64748b;font-size:.85rem">Nenhum exercício ainda.</p>';
-  document.getElementById('statWorkout').textContent = state.workout.length ? state.workout.length+'ex' : '–';
-}
-
-function addExercicio() {
-  const nome = document.getElementById('exName').value.trim();
-  if(!nome) return;
-  state.workout.push({nome, series: document.getElementById('exSeries').value||'0', reps: document.getElementById('exReps').value||'0', peso: document.getElementById('exPeso').value||'0'});
-  ['exName','exSeries','exReps','exPeso'].forEach(id => document.getElementById(id).value='');
-  localStorage.setItem('daniapp', JSON.stringify(state));
-  renderWorkout();
-}
-
-function renderTasks() {
-  ['plantasy','youtube','farmacia'].forEach(cat => {
-    const el = document.getElementById('tasks-'+cat);
-    el.innerHTML = (state.tasks[cat]||[]).map((t,i) => '<div class="task-item"><input type="checkbox"'+(t.done?' checked':'')+' onchange="toggleTask(''+cat+'','+i+',this.checked)"><span style="flex:1;'+(t.done?'text-decoration:line-through;color:#64748b':'')+'">'+(t.text)+'</span></div>').join('') || '<p style="color:#64748b;font-size:.8rem">Sem tarefas.</p>';
+function renderTasks(){
+  let open=0;
+  ['plantasy','youtube','farmacia'].forEach(cat=>{
+    const el=document.getElementById('t-'+cat);
+    const items=S.tasks[cat]||[];
+    open+=items.filter(t=>!t.done).length;
+    el.innerHTML=items.length?items.map((t,i)=>'<div class="task-row"><div class="task-check'+(t.done?' done':'')+'" onclick="toggleTask(''+cat+'','+i+')">'+(t.done?'<svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#fff" stroke-width="2"><path d="M2 5l2 2 4-4"/></svg>':'')+'</div><span class="task-text'+(t.done?' done':'')+'">'+t.text+'</span></div>').join(''):'<p style="font-size:12px;color:var(--muted)">Sem tarefas.</p>';
   });
-  const total = Object.values(state.tasks).flat().filter(t=>!t.done).length;
-  document.getElementById('statTasks').textContent = total;
+  document.getElementById('sTasks').textContent=open;
+}
+function toggleTask(cat,i){S.tasks[cat][i].done=!S.tasks[cat][i].done;save();renderTasks();}
+function addTask(){
+  const text=document.getElementById('tText').value.trim();
+  const cat=document.getElementById('tCat').value;
+  if(!text)return;
+  S.tasks[cat].push({text,done:false});
+  document.getElementById('tText').value='';
+  save();renderTasks();
 }
 
-function toggleTask(cat, i, done) {
-  state.tasks[cat][i].done = done;
-  localStorage.setItem('daniapp', JSON.stringify(state));
-  renderTasks();
+function renderNotes(){
+  document.getElementById('sNotes').textContent=S.notes.length;
+  document.getElementById('notesList').innerHTML=S.notes.slice().reverse().map(n=>'<div class="note-card"><div class="note-date">'+n.date+'</div><div class="note-body">'+n.text+'</div></div>').join('');
 }
-
-function addTask() {
-  const text = document.getElementById('newTask').value.trim();
-  const cat = document.getElementById('newTaskCat').value;
-  if(!text) return;
-  state.tasks[cat].push({text, done:false});
-  document.getElementById('newTask').value='';
-  localStorage.setItem('daniapp', JSON.stringify(state));
-  renderTasks();
-}
-
-function renderNotes() {
-  const notes = JSON.parse(localStorage.getItem('daniapp-notes')||'[]');
-  document.getElementById('notesList').innerHTML = notes.slice().reverse().map(n => '<div class="card"><p style="font-size:.75rem;color:#64748b;margin-bottom:.4rem">'+n.date+'</p><p style="font-size:.9rem">'+n.text+'</p></div>').join('');
-}
-
-function saveNote() {
-  const text = document.getElementById('noteText').value.trim();
-  if(!text) return;
-  const notes = JSON.parse(localStorage.getItem('daniapp-notes')||'[]');
-  notes.push({text, date: new Date().toLocaleString('pt-PT')});
-  localStorage.setItem('daniapp-notes', JSON.stringify(notes));
+function saveNote(){
+  const text=document.getElementById('noteText').value.trim();
+  if(!text)return;
+  S.notes.push({text,date:new Date().toLocaleString('pt-PT')});
   document.getElementById('noteText').value='';
-  renderNotes();
+  save();renderNotes();
 }
 
-renderSuppl();
-renderWorkout();
-renderTasks();
-renderNotes();
+renderSup();renderEx();renderTasks();renderNotes();
 </script>
 </body>
 </html>
