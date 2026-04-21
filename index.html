@@ -150,6 +150,13 @@ nav{position:fixed;bottom:0;left:0;right:0;z-index:200;background:rgba(240,247,2
 .nb2 svg{width:20px;height:20px;stroke-width:1.8}
 .nb2.on{color:var(--moss)}
 .nb2.on::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:20px;height:3px;background:var(--moss);border-radius:0 0 3px 3px}
+
+.streak-banner{background:linear-gradient(135deg,var(--sun) 0%,#E8A830 100%);border-radius:var(--rsm);padding:10px 14px;margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.streak-fire{font-size:28px;line-height:1}
+.streak-text{flex:1}
+.streak-num{font-size:20px;font-weight:700;color:#5A3A00;line-height:1}
+.streak-lbl{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#7A5A00}
+.tab-badge{background:var(--berry);color:#fff;border-radius:50%;width:16px;height:16px;font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;margin-left:2px;vertical-align:middle}
 </style>
 </head>
 <body>
@@ -181,6 +188,7 @@ nav{position:fixed;bottom:0;left:0;right:0;z-index:200;background:rgba(240,247,2
     <div id="ev-wrap"><div class="empty">A carregar...</div></div>
   </div>
   <div id="p-sup" class="pg">
+    <div id="streak-wrap"></div>
     <div id="sup-manha"></div>
     <div id="sup-tarde"></div>
     <div id="sup-noite"></div>
@@ -246,6 +254,7 @@ nav{position:fixed;bottom:0;left:0;right:0;z-index:200;background:rgba(240,247,2
       <div class="cfg-f"><label class="cfg-l">Tasks DB ID</label><input class="cfg-i" id="c-tdb" placeholder="xxxxxxxx-..."></div>
       <div class="cfg-f"><label class="cfg-l">Notes DB ID</label><input class="cfg-i" id="c-ndb" placeholder="xxxxxxxx-..."></div>
       <div class="cfg-f"><label class="cfg-l">Google Calendar iCal URL</label><input class="cfg-i" id="c-ics" placeholder="https://calendar.google.com/calendar/ical/..."></div>
+      <div class="cfg-f"><label class="cfg-l">Biomarcadores DB ID</label><input class="cfg-i" id="c-biodb" placeholder="xxxxxxxx-..."></div>
       <button class="btn-sv" id="cBtn">Guardar configuracao</button>
     </div></div>
   </div>
@@ -479,6 +488,9 @@ function renderSup() {
   });
   var ct = document.getElementById("ct-sup");
   if (ct) ct.textContent = done+"/"+total;
+  checkAndSaveSupHistory();
+  updateSupBadge();
+  renderStreak();
 }
 
 function showSupInfo(name) {
@@ -693,6 +705,7 @@ document.getElementById("bioBtn").addEventListener("click", function() {
   var idx = S.bio.findIndex(function(b){ return b.date === TODAY; });
   if (idx > -1) S.bio[idx] = entry; else S.bio.unshift(entry);
   save(); renderBioHist();
+  syncBioToNotion(entry);
   var btn = document.getElementById("bioBtn");
   btn.textContent = "Guardado!"; btn.style.background = "#2D5A27";
   setTimeout(function(){ btn.textContent = "Guardar biomarcadores"; btn.style.background = ""; }, 2000);
@@ -725,11 +738,12 @@ function renderBioHist() {
 document.getElementById("c-nk").value = CFG.nk||"";
 document.getElementById("c-tdb").value = CFG.tdb||"";
 document.getElementById("c-ndb").value = CFG.ndb||"";
-document.getElementById("c-ics").value = CFG.ics||"";
+document.getElementById("c-ics").value = CFG.ics||""; document.getElementById("c-biodb").value = CFG.biodb||"";
 document.getElementById("cBtn").addEventListener("click", function() {
   CFG.nk = document.getElementById("c-nk").value.trim();
   CFG.tdb = document.getElementById("c-tdb").value.trim();
   CFG.ndb = document.getElementById("c-ndb").value.trim();
+  CFG.biodb = document.getElementById("c-biodb").value.trim();
   CFG.ics = document.getElementById("c-ics").value.trim() || ICS;
   localStorage.setItem("hq-cfg", JSON.stringify(CFG));
   var b = document.getElementById("cBtn");
@@ -762,8 +776,109 @@ scheduleNotif("HQ - Suplementos Manha 🌿", "Hora dos suplementos da manha!", 8
 scheduleNotif("HQ - Suplementos Tarde ☀️", "Hora dos suplementos da tarde!", 13, 30);
 scheduleNotif("HQ - Suplementos Noite 🌙", "Hora dos suplementos da noite!", 22, 0);
 
+
+// STREAK
+function calcStreak() {
+  var keys = Object.keys(S.workout_hist || {}).sort();
+  if (!keys.length) return 0;
+  var streak = 0;
+  var d = new Date();
+  d.setHours(0,0,0,0);
+  for (var i = 0; i < 90; i++) {
+    var k = d.toISOString().slice(0,10);
+    var prev = S.sup_history && S.sup_history[k];
+    if (prev && prev.allDone) { streak++; } else if (k !== TODAY) { break; }
+    d.setDate(d.getDate() - 1);
+  }
+  return streak;
+}
+function checkAndSaveSupHistory() {
+  var total = Object.values(SUP).flat().length;
+  var done = Object.keys(S.sup).filter(function(k){ return S.sup[k]; }).length;
+  var allDone = done >= total;
+  if (!S.sup_history) S.sup_history = {};
+  S.sup_history[TODAY] = {done:done, total:total, allDone:allDone};
+  save();
+}
+function renderStreak() {
+  var el = document.getElementById("streak-wrap");
+  if (!el) return;
+  var streak = calcStreak();
+  if (streak < 2) { el.innerHTML = ""; return; }
+  el.innerHTML = "<div class='streak-banner'>"
+    + "<div class='streak-fire'>🔥</div>"
+    + "<div class='streak-text'>"
+    + "<div class='streak-num'>" + streak + " dias</div>"
+    + "<div class='streak-lbl'>Streak de suplementos</div>"
+    + "</div></div>";
+}
+function updateSupBadge() {
+  var h = new Date().getHours();
+  var slot = h < 12 ? "manha" : h < 17 ? "tarde" : "noite";
+  var slotDone = SUP[slot].filter(function(n){ return !!S.sup[slot+"|"+n]; }).length;
+  var slotTotal = SUP[slot].length;
+  var pending = slotTotal - slotDone;
+  var tb = document.getElementById("tab-sup");
+  if (!tb) return;
+  var existing = tb.querySelector('.tab-badge');
+  if (existing) existing.remove();
+  if (pending > 0) {
+    var badge = document.createElement('span');
+    badge.className = 'tab-badge';
+    badge.textContent = pending;
+    tb.appendChild(badge);
+  }
+}
+
+// BIO NOTION SYNC
+function createBioDB() {
+  if (!CFG.nk) return;
+  fetch(PROXY+"/v1/databases", {
+    method:"POST", headers:nH(),
+    body:JSON.stringify({
+      parent:{type:"page_id",page_id:"348e49f4-3945-80de-bc3f-f9b588a96c52"},
+      title:[{type:"text",text:{content:"HQ Biomarcadores"}}],
+      properties:{
+        Name:{title:{}},
+        Data:{date:{}},
+        Peso:{number:{format:"number"}},
+        Sono:{number:{format:"number"}},
+        Energia:{number:{format:"number"}},
+        Humor:{number:{format:"number"}}
+      }
+    })
+  }).then(function(r){return r.json();}).then(function(d){
+    if (d.id) {
+      CFG.biodb = d.id;
+      localStorage.setItem("hq-cfg", JSON.stringify(CFG));
+      var el = document.getElementById("c-biodb");
+      if (el) el.value = d.id;
+    }
+  }).catch(function(){});
+}
+function syncBioToNotion(entry) {
+  if (!CFG.nk || !CFG.biodb) return;
+  fetch(PROXY+"/v1/pages", {
+    method:"POST", headers:nH(),
+    body:JSON.stringify({
+      parent:{database_id:CFG.biodb},
+      properties:{
+        Name:{title:[{text:{content:"Bio "+entry.date}}]},
+        Data:{date:{start:entry.date}},
+        Peso:entry.peso ? {number:parseFloat(entry.peso)} : undefined,
+        Sono:entry.sono ? {number:parseFloat(entry.sono)} : undefined,
+        Energia:entry.energia ? {number:entry.energia} : undefined,
+        Humor:entry.humor ? {number:entry.humor} : undefined
+      }
+    })
+  }).catch(function(){});
+}
+
 // INIT
 renderFocus();
+renderStreak();
+updateSupBadge();
+if (CFG.nk && !CFG.biodb) createBioDB();
 loadCal();
 renderSup();
 renderEx();
