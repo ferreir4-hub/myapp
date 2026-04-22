@@ -490,7 +490,7 @@ function renderSup() {
   if (ct) ct.textContent = done+"/"+total;
   checkAndSaveSupHistory();
   updateSupBadge();
-  renderStreak();
+  if (S.sup_history) renderStreak();
 }
 
 function showSupInfo(name) {
@@ -688,15 +688,24 @@ function renderStars(containerId, val, cb) {
     star.className = "star" + (i <= val ? " on" : "");
     star.textContent = i <= val ? "⭐" : "☆";
     star.dataset.v = i;
+    star.dataset.cid = containerId;
     star.addEventListener("click", function() {
-      cb(parseInt(this.dataset.v));
+      var newVal = parseInt(this.dataset.v);
+      cb(newVal);
     });
     el.appendChild(star);
   }
 }
+function makeStarCb(id, store) {
+  return function(v) {
+    if (store === "energia") bioEnerg = v;
+    else bioHumor = v;
+    renderStars(id, v, makeStarCb(id, store));
+  };
+}
 function initStars() {
-  renderStars("stars-energia", bioEnerg, function(v) { bioEnerg = v; renderStars("stars-energia", v, arguments.callee); });
-  renderStars("stars-humor", bioHumor, function(v) { bioHumor = v; renderStars("stars-humor", v, arguments.callee); });
+  renderStars("stars-energia", bioEnerg, makeStarCb("stars-energia", "energia"));
+  renderStars("stars-humor", bioHumor, makeStarCb("stars-humor", "humor"));
 }
 document.getElementById("bioBtn").addEventListener("click", function() {
   var peso = document.getElementById("bio-peso").value;
@@ -779,7 +788,7 @@ scheduleNotif("HQ - Suplementos Noite 🌙", "Hora dos suplementos da noite!", 2
 
 // STREAK
 function calcStreak() {
-  var keys = Object.keys(S.workout_hist || {}).sort();
+  var keys = Object.keys(S.sup_history || {}).sort();
   if (!keys.length) return 0;
   var streak = 0;
   var d = new Date();
@@ -876,7 +885,6 @@ function syncBioToNotion(entry) {
 
 // INIT
 renderFocus();
-renderStreak();
 updateSupBadge();
 if (CFG.nk && !CFG.biodb) createBioDB();
 loadCal();
